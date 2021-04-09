@@ -8,50 +8,57 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    
+    @State private var isNight = false
+    
     var body: some View {
         ZStack {
-            LinearGradient(gradient: Gradient(colors: [.white, .gray, .blue]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)
+            BackgroundView(isNight: $isNight)
+            
             VStack(spacing: 8) {
-                Text("London")
-                    .font(.system(size: 32, weight: .medium, design: .default))
-                    .foregroundColor(.white)
-                    .padding()
-                Text("Mostly Cloudy")
-                    .foregroundColor(.white)
-                Text("8°")
-                    .font(.system(size: 80, weight: .medium, design: .default))
-                    .foregroundColor(.white)
-                    .padding(.bottom, 80)
+                CityTextView(cityName: "London")
+                WeatherView(description: isNight ? "Clear Sky" : "Mostly Cloudy", temperature: isNight ? 6 : 8)
+                
                 HStack(spacing: 18) {
-                    WeatherTimeView(time: "Now", imageName: "cloud.fill", temperature: 8)
-                    WeatherTimeView(time: "18", imageName: "cloud.fill", temperature: 7)
-                    WeatherTimeView(time: "19", imageName: "cloud.fill", temperature: 7)
-                    WeatherTimeView(time: "20", imageName: "cloud.fill", temperature: 6)
-                    WeatherTimeView(time: "21", imageName: "cloud.rain.fill", temperature: 6)
-                    WeatherTimeView(time: "22", imageName: "cloud.rain.fill", temperature: 6)
-                    WeatherTimeView(time: "23", imageName: "cloud.rain.fill", temperature: 6)
-                    WeatherTimeView(time: "24", imageName: "cloud.fill", temperature: 6)
+                    WeatherTimeView(time: "Now",
+                                    imageName: "cloud.fill",
+                                    temperature: 8)
+                    WeatherTimeView(time: "18",
+                                    imageName: "cloud.fill",
+                                    temperature: 7)
+                    WeatherTimeView(time: "19",
+                                    imageName: "cloud.fill",
+                                    temperature: 7)
+                    WeatherTimeView(time: "20",
+                                    imageName: "cloud.fill",
+                                    temperature: 6)
+                    WeatherTimeView(time: "21",
+                                    imageName: "cloud.rain.fill",
+                                    temperature: 6)
+                    WeatherTimeView(time: "22",
+                                    imageName: "cloud.rain.fill",
+                                    temperature: 6)
+                    WeatherTimeView(time: "23",
+                                    imageName: "cloud.rain.fill",
+                                    temperature: 6)
+                    WeatherTimeView(time: "24",
+                                    imageName: "cloud.fill",
+                                    temperature: 6)
                 }
 
                 VStack() {
-                WeatherDayView(day: "Monday", imageName: "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
-                WeatherDayView(day: "Tuesday", imageName: "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
-                WeatherDayView(day: "Wednesday", imageName: "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
-                WeatherDayView(day: "Thursday", imageName: "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
-                WeatherDayView(day: "Friday", imageName: "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
+                    WeatherDayView(day: "Monday", imageName: isNight ? "moon.fill" : "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
+                WeatherDayView(day: "Tuesday", imageName: isNight ? "moon.fill" : "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
+                WeatherDayView(day: "Wednesday", imageName: isNight ? "moon.fill" : "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
+                WeatherDayView(day: "Thursday", imageName: isNight ? "moon.fill" : "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
+                WeatherDayView(day: "Friday", imageName: isNight ? "moon.fill" : "cloud.sun.fill", dayTemperature: 11, nightTemperature: 10)
                 }
                 Spacer()
                 Button {
-                    print("tapped")
+                    isNight.toggle()
                 } label: {
-                    Text("Night Mode")
-                        .frame(width: 200, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .font(.system(size: 24, weight: .bold, design: .default))
-                        .background(Color.black)
-                        .cornerRadius(10)
+                    WeatherButton(title: isNight ? "Day Mode" : "Night Mode", textColor: Color.blue, backgroundColor: Color.black)
                 }
                 Spacer()
             }
@@ -112,5 +119,39 @@ struct WeatherDayView: View {
                 .foregroundColor(.gray)
             }
         }
+    }
+}
+
+struct BackgroundView: View {
+    @Binding  var isNight: Bool
+    
+    var body: some View {
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .gray, isNight ? .gray : .blue]),
+                       startPoint: .topLeading,
+                       endPoint: .bottomTrailing)
+            .edgesIgnoringSafeArea(.all)
+    }
+}
+
+struct CityTextView: View {
+    var cityName: String
+    var body: some View {
+    Text(cityName)
+        .font(.system(size: 32, weight: .medium, design: .default))
+        .foregroundColor(.white)
+        .padding()
+    }
+}
+
+struct WeatherView: View {
+    var description: String
+    var temperature: Int
+    var body: some View {
+        Text(description)
+            .foregroundColor(.white)
+        Text("\(temperature)°")
+            .font(.system(size: 80, weight: .medium, design: .default))
+            .foregroundColor(.white)
+            .padding(.bottom, 80)
     }
 }
